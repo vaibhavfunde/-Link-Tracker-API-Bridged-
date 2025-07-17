@@ -47,10 +47,7 @@ export interface IUser extends Document {
   password: string;
   isVerified?: boolean;
   isAdmin?: boolean;
-  forgotPasswordToken?: string;
-  forgotPasswordTokenExpiry?: Date;
-  verifyToken?: string;
-  verifyTokenExpiry?: Date;
+  
   createdAt?: Date;
   updatedAt?: Date;
 }

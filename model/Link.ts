@@ -1,14 +1,35 @@
 // src/schemas/link.schema.ts
 import { Schema, model, Document, Types, models } from "mongoose";
 
+// Subdocument type for analytics
+const analyticsSchema = new Schema(
+  {
+    timestamp: {
+      type: Date,
+      default: Date.now,
+    },
+    userAgent: String,
+    referrer: String,
+    ip: String,
+    country: String,
+  },
+  { _id: false }
+);
+
+// Main link document
 export interface ILink extends Document {
   longUrl: string;
   shortCode: string;
-  createdBy?: Types.ObjectId;
   customAlias?: string;
+  createdBy?: Types.ObjectId;
   expiresAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
+  analytics?: Array<{
+    timestamp: Date;
+    userAgent: string;
+    referrer?: string;
+    ip: string;
+    country?: string;
+  }>;
 }
 
 const linkSchema = new Schema<ILink>(
@@ -37,6 +58,7 @@ const linkSchema = new Schema<ILink>(
       type: Date,
       default: null,
     },
+    analytics: [analyticsSchema], // Embedded analytics array
   },
   { timestamps: true }
 );

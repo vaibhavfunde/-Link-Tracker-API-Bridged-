@@ -49,6 +49,7 @@ const SignUp = () => {
   const handleOnSubmit = (values: SignupFormData) => {
     signupMutation.mutate(values, {
       onSuccess: () => {
+       
         toast.success("Signup successful! Please verify your email.");
         form.reset();
         router.push("/profile"); // Redirect to profile or login page
