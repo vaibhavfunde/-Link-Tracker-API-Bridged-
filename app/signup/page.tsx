@@ -45,7 +45,13 @@ const SignUp = () => {
     },
   });
 
-  const signupMutation = useSignup();
+  //const {signupMutation , isLoading} = useSignup();
+//   const {
+//   mutate: signup,
+//   isLoading
+// } = useSignup();
+const signupMutation = useSignup();
+
 
   const handleOnSubmit = (values: SignupFormData) => {
     signupMutation.mutate(values, {
@@ -93,6 +99,35 @@ const SignUp = () => {
 },
     });
   };
+
+
+
+// const handleOnSubmit = (values: SignupFormData) => {
+//   signup(values, {
+//     onSuccess: () => {
+//       toast.success("Signup successful! Please verify your email.");
+//       form.reset();
+//       router.push("/dashboard");
+//     },
+//     onError: (error: unknown) => {
+//       let errorMessage = "An unexpected error occurred";
+//       const axiosError = error as AxiosError<{ error: string }>;
+//       const message = axiosError?.response?.data?.error;
+
+//       if (message) {
+//         if (message.toLowerCase().includes("email")) {
+//           errorMessage = "Email already exists. Please use another.";
+//         } else if (message.toLowerCase().includes("username")) {
+//           errorMessage = "Username already exists. Try something else.";
+//         } else {
+//           errorMessage = message;
+//         }
+//       }
+
+//       toast.error(errorMessage);
+//     },
+//   });
+// };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-muted/40 p-4">
@@ -145,9 +180,17 @@ const SignUp = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={signupMutation.isLoading}>
+              {/* <Button type="submit" className="w-full" disabled={signupMutation.isLoading}>
                 {signupMutation.isLoading ? "Signing up..." : "Sign up"}
-              </Button>
+              </Button> */}
+              {/* <Button type="submit" className="w-full" disabled={isLoading}>
+  {isLoading ? "Signing up..." : "Sign up"}
+</Button> */}
+<Button type="submit" className="w-full" disabled={signupMutation.isPending}>
+  {signupMutation.isPending ? "Signing up..." : "Sign up"}
+</Button>
+
+
             </form>
           </Form>
         </CardContent>

@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useLogin } from "@/hook/use-auth";
+import { AxiosError } from "axios";
 // import { loginSchema } from "@/lib/schema";
 
 // Define Zod schema for login
@@ -59,21 +60,42 @@ const handleOnSubmit = (values: LoginFormData) => {
       router.push("/dashboard"); // or "/dashboard"
        
     },
-    onError: (error: any) => {
+    // onError: (error: any) => {
+    //   let errorMessage = "An unexpected error occurred";
+
+    //   if (error?.response?.data?.error) {
+    //     const message = error.response.data.error;
+
+    //     if (message.toLowerCase().includes("email") || message.toLowerCase().includes("user")) {
+    //       errorMessage = "Email not found or user doesn't exist.";
+    //     } else if (message.toLowerCase().includes("password")) {
+    //       errorMessage = "Incorrect password.";
+    //     } else {
+    //       errorMessage = message;
+    //     }
+    //   }
+
+    //   toast.error(errorMessage);
+    // },
+
+
+         onError: (error: unknown) => {
       let errorMessage = "An unexpected error occurred";
-
-      if (error?.response?.data?.error) {
-        const message = error.response.data.error;
-
-        if (message.toLowerCase().includes("email") || message.toLowerCase().includes("user")) {
-          errorMessage = "Email not found or user doesn't exist.";
-        } else if (message.toLowerCase().includes("password")) {
-          errorMessage = "Incorrect password.";
+    
+      const axiosError = error as AxiosError<{ error: string }>;
+    
+      const message = axiosError?.response?.data?.error;
+    
+      if (message) {
+        if (message.toLowerCase().includes("email")) {
+          errorMessage = "Email already exists. Please use another.";
+        } else if (message.toLowerCase().includes("username")) {
+          errorMessage = "Username already exists. Try something else.";
         } else {
           errorMessage = message;
         }
       }
-
+    
       toast.error(errorMessage);
     },
   });
@@ -126,7 +148,7 @@ const handleOnSubmit = (values: LoginFormData) => {
         </CardContent>
         <CardFooter className="flex items-center justify-center mt-6">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-blue-600">
               Sign up
             </Link>

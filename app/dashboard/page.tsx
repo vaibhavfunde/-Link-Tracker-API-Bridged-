@@ -33,7 +33,8 @@ export default function ShortenPage() {
         setShortUrl(data.shortUrl);
       }
     } catch (err) {
-      setError("Failed to create short link.");
+
+      setError("Failed to create short link." + (err instanceof Error ? `: ${err.message}` : ""));
     }
   };
 

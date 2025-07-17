@@ -29,7 +29,9 @@ export default function LinkStatsPage() {
           toast.error(data.error || 'Failed to load stats');
         }
       } catch (err) {
-        toast.error('Something went wrong');
+        console.error('Error fetching stats:', err);
+        toast.error('Failed to load stats');
+       
       } finally {
         setLoading(false);
       }
