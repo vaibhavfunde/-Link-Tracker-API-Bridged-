@@ -25,13 +25,23 @@ export async function POST(request: NextRequest) {
     // Optional: Decode JWT to get user
     const token = request.cookies.get("token")?.value;
     let userId;
+    interface JwtPayload {
+  id: string;
+}
+
     if (token) {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-        userId = (decoded as any).id;
-      } catch (err) {
-        console.warn("Invalid JWT");
-      }
+      // try {
+      //   const decoded = jwt.verify(token, process.env.JWT_SECRET!);
+      //   userId = (decoded as any).id;
+      // } catch (err) {
+      //   console.warn("Invalid JWT" , err);
+      // }
+  try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    userId = decoded.id;
+  } catch (err) {
+    console.warn("Invalid JWT" + err);
+  }
     }
 
     // Default expiresAt to 10 days later if not provided
