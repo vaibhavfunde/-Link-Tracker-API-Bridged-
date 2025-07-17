@@ -30,6 +30,7 @@ import { toast } from "react-hot-toast";
 import { useSignup } from "@/hook/use-auth";
 import { signUpSchema } from "@/lib/schema";
 //import { useSignup } from "@/hooks/useSignup";
+import { AxiosError } from "axios";
 
 export type SignupFormData = z.infer<typeof signUpSchema>;
 
@@ -54,22 +55,42 @@ const SignUp = () => {
         form.reset();
         router.push("/dashboard"); // Redirect to profile or login page
       },
-      onError: (error: any) => {
-        let errorMessage = "An unexpected error occurred";
-        if (error?.response?.data?.error) {
-          const message = error.response.data.error;
+      // onError: (error: any) => {
+      //   let errorMessage = "An unexpected error occurred";
+      //   if (error?.response?.data?.error) {
+      //     const message = error.response.data.error;
 
-          if (message.toLowerCase().includes("email")) {
-            errorMessage = "Email already exists. Please use another.";
-          } else if (message.toLowerCase().includes("username")) {
-            errorMessage = "Username already exists. Try something else.";
-          } else {
-            errorMessage = message;
-          }
-        }
+      //     if (message.toLowerCase().includes("email")) {
+      //       errorMessage = "Email already exists. Please use another.";
+      //     } else if (message.toLowerCase().includes("username")) {
+      //       errorMessage = "Username already exists. Try something else.";
+      //     } else {
+      //       errorMessage = message;
+      //     }
+      //   }
 
-        toast.error(errorMessage);
-      },
+      //   toast.error(errorMessage);
+      // },
+
+      onError: (error: unknown) => {
+  let errorMessage = "An unexpected error occurred";
+
+  const axiosError = error as AxiosError<{ error: string }>;
+
+  const message = axiosError?.response?.data?.error;
+
+  if (message) {
+    if (message.toLowerCase().includes("email")) {
+      errorMessage = "Email already exists. Please use another.";
+    } else if (message.toLowerCase().includes("username")) {
+      errorMessage = "Username already exists. Try something else.";
+    } else {
+      errorMessage = message;
+    }
+  }
+
+  toast.error(errorMessage);
+},
     });
   };
 

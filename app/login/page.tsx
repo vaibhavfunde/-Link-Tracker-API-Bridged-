@@ -4,9 +4,9 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect, useRouter } from "next/navigation";
+ import {  useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
-import axios from "axios";
+
 
 import {
   Card,
