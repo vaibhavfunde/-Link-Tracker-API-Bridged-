@@ -56,7 +56,7 @@ const handleOnSubmit = (values: LoginFormData) => {
     onSuccess: () => {
       toast.success("Login successful!");
       form.reset();
-      router.push("/profile"); // or "/dashboard"
+      router.push("/dashboard"); // or "/dashboard"
        
     },
     onError: (error: any) => {

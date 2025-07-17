@@ -52,7 +52,7 @@ const SignUp = () => {
        
         toast.success("Signup successful! Please verify your email.");
         form.reset();
-        router.push("/profile"); // Redirect to profile or login page
+        router.push("/dashboard"); // Redirect to profile or login page
       },
       onError: (error: any) => {
         let errorMessage = "An unexpected error occurred";
