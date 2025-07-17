@@ -78,6 +78,50 @@ import Link from "@/model/Link";
 //   }
 // }
 
+
+// export async function GET(
+//   req: NextRequest,
+//   context: { params: { shortCode: string } }
+// ) {
+//   try {
+//     await connectToDatabase();
+
+//     const params = await context.params; // ✅ Awaiting if required
+//     const shortCode = params.shortCode;
+
+//     console.log("Fetching link for shortCode:", shortCode);
+
+//     const link = await Link.findOne({ shortCode });
+
+//     if (!link) {
+//       return NextResponse.json({ error: "Short link not found" }, { status: 404 });
+//     }
+
+//     if (link.expiresAt && new Date() > link.expiresAt) {
+//       return NextResponse.json({ error: "Short link has expired" }, { status: 410 });
+//     }
+
+//     const userAgent = req.headers.get("user-agent") || "Unknown";
+//     const referrer = req.headers.get("referer") || "Direct";
+//     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "Unknown";
+
+//     link.analytics?.push({ timestamp: new Date(), userAgent, referrer, ip });
+//     await link.save();
+
+//     return NextResponse.json({ longUrl: link.longUrl });
+//   } catch (err) {
+//     return NextResponse.json({ error: (err as Error).message }, { status: 500 });
+//   }
+// }
+
+
+
+
+
+// import { NextRequest, NextResponse } from "next/server";
+// import { connectToDatabase } from "@/lib/db";
+// import Link from "@/model/Link";
+
 export async function GET(
   req: NextRequest,
   context: { params: { shortCode: string } }
@@ -85,8 +129,9 @@ export async function GET(
   try {
     await connectToDatabase();
 
-    const params = await context.params; // ✅ Awaiting if required
-    const shortCode = params.shortCode;
+    // ✅ Await params to avoid production error
+    const resolvedParams = await Promise.resolve(context.params);
+    const shortCode = resolvedParams.shortCode;
 
     console.log("Fetching link for shortCode:", shortCode);
 
@@ -104,7 +149,13 @@ export async function GET(
     const referrer = req.headers.get("referer") || "Direct";
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "Unknown";
 
-    link.analytics?.push({ timestamp: new Date(), userAgent, referrer, ip });
+    link.analytics?.push({
+      timestamp: new Date(),
+      userAgent,
+      referrer,
+      ip,
+    });
+
     await link.save();
 
     return NextResponse.json({ longUrl: link.longUrl });
