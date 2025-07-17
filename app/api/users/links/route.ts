@@ -11,7 +11,7 @@ export async function GET() {
     await connectToDatabase();
 
     const cookieStore = cookies();
-    const token = cookieStore.get("token")?.value;
+    const token = (await cookieStore).get("token")?.value;
 
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -20,7 +20,7 @@ export async function GET() {
     let decoded;
     try {
       decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-    } catch (err) {
+    } catch (error) {
       return NextResponse.json({ error: "Invalid token" }, { status: 403 });
     }
 
